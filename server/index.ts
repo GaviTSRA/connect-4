@@ -203,6 +203,7 @@ app.ws("/connect", (ws: WebSocket) => {
 
             if (games[id][turn] == username) {
                 let board = games[id][2]
+                if(board[action][0] != 0) return
                 board[action][0] = turn+1
                 board = update(board)
                 games[id][2] = board
