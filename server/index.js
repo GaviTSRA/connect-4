@@ -186,7 +186,9 @@ app.ws("/connect", (ws, req) => {
                 let winner = checkWin(board)
                 if (winner != 0) {
                     games[id][3].send("winner " + winner)
-                    games[id][4].send("winner " + winner)   
+                    games[id][4].send("winner " + winner)
+                    delete games[id]
+                    return
                 }
 
                 if (turn == 1) games[id][5] = 0
