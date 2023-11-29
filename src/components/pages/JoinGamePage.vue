@@ -51,6 +51,7 @@
             <p class="gameUser">{{ game[1] }}</p>
             <button class="joinBtn" @click="join(game[0])" :disabled="username.length < 3">Join</button>
         </div>
+        <p v-if="games.length == 0">No public games!</p>
     </div>
     <div class="joinID">
         <label for="id">Game ID</label>
@@ -104,6 +105,7 @@
     }
 
     .publicGames {
+        align-items: center;
         display: flex;
         flex-direction: column;
     }
