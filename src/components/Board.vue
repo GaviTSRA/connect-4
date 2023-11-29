@@ -1,8 +1,19 @@
 <script setup>    
     import Cell from "./Cell.vue"
+    import { watch } from "vue"
+    import JSConfetti from "js-confetti"
     
+    const jsConfetti = new JSConfetti()
     defineEmits(["insert"])
     let props = defineProps(["board", "finished", "winner", "turn"])
+
+    watch(
+        () => props.winner, 
+        () => {
+            if(props.winner == 0) return
+            if(props.turn == 1) return
+            jsConfetti.addConfetti()
+    })
 </script>
 
 <template>

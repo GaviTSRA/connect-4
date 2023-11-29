@@ -44,7 +44,7 @@
 <template>
     <div class="game">
         <BackButton/>
-        <Board @insert="(col) => insert(col)" :board="board" :finished="gameFinished" :winner="winner" turn="1"/>
+        <Board @insert="(col) => insert(col)" :board="board" :finished="gameFinished" :winner="winner" :turn="gameFinished ? '0' : '1'"/>
         <button @click="reset" class="reset-button">Reset</button>
     </div>
 </template>
