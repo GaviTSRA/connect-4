@@ -29,7 +29,7 @@
 
 <template>
     <div class="selection">
-        <button class="btn-local-singleplayer" disabled="true" @click="go('/play/local/singleplayer')">Singleplayer</button>
+        <button class="btn-local-singleplayer" @click="go('/play/local/singleplayer')">Singleplayer</button>
         <button class="btn-local-multiplayer" @click="go('/play/local/multiplayer')">Multiplayer</button>
         <h1>Local</h1>
         

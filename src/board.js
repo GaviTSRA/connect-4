@@ -84,7 +84,52 @@ function checkTile(board, column, row) {
     return 0
 }
 
+function copyBoard(board) {
+    return JSON.parse(JSON.stringify(board))
+}
+
+function getNextMove(board) {
+    let _options = [0, 1, 2, 3, 4, 5, 6]
+    let options = []
+    for (let option of _options) {
+        if (board[option][0] != 0) continue
+        options.push(option)
+    }
+
+    let winningMove = checkWinningMove(board, options, 2)
+    if (winningMove != -1) return winningMove
+
+    let blockWinMove = checkWinningMove(board, options, 1)
+    if (blockWinMove != -1) return blockWinMove
+
+    let finalOptions = []
+    for (let option of options) {
+        let copy = copyBoard(board)
+        copy[option][0] = 2
+        copy = update(copy)
+        if (checkWinningMove(copy, options, 1) == -1) finalOptions.push(option)
+    }
+
+    if (finalOptions.length == 0) finalOptions = options
+
+    let chosen =  finalOptions[Math.floor(Math.random()*finalOptions.length)]
+    return chosen;
+}
+
+function checkWinningMove(board, options, user) {
+    for (let option of options) {
+        let copy = copyBoard(board)
+        copy[option][0] = user
+        copy = update(copy)
+        if (checkWin(copy) == user) {
+            return option
+        }
+    }
+    return -1
+}
+
 export {
     update,
-    checkWin
+    checkWin,
+    getNextMove
 }

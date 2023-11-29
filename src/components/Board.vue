@@ -23,7 +23,7 @@
     <div class="board">
         <div v-for="(column, index) in props.board">
             <button class="insert-button" v-if="!props.finished" @click="$emit('insert', index)">
-                <img v-if="props.board[index][0] == 0 && props.turn == 1" src="arrow.png"/>
+                <img v-if="props.board[index][0] == 0 && props.turn == 1" src="/arrow.png"/>
             </button>
             <div class="element" v-for="element in column">
                <Cell :value="element"/>

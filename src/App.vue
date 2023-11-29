@@ -7,11 +7,13 @@ import { ref, computed } from "vue"
 import WaitingPage from "./components/pages/WaitingPage.vue"
 import JoinGamePage from "./components/pages/JoinGamePage.vue"
 import OnlineGamePage from "./components/pages/OnlineGamePage.vue"
+import SingleplayerPage from "./components/pages/SingleplayerPage.vue"
 
 const routes = {
   "": SelectPage,
   "/": SelectPage,
   "/play/local/multiplayer": LocalMultiplayerPage,
+  "/play/local/singleplayer": SingleplayerPage,
   "/play/online/create": CreateGamePage,
   "/play/online/waiting": WaitingPage,
   "/play/online/join": JoinGamePage,
