@@ -5,7 +5,7 @@
     let props = defineProps(["value"])
     
     function getColor() {
-        return props.value == 0 ? "" : props.value == 1 ? "green" : "red"
+        return props.value == 0 ? "#222222" : props.value == 1 ? "green" : "red"
     }
 </script>
 
@@ -16,6 +16,7 @@
 <style scoped>
     .cell {
         background-color: var(--color);
-        padding: 2rem;
+        padding: 1.9rem;
+        border-radius: 50px;
     }
 </style>

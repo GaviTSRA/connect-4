@@ -33,16 +33,25 @@
 
 <style scoped>
     .board {
-        max-width: 28rem;
+        max-width: 30rem;
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         justify-content: center;
+        border-radius: 20px;
+        border-width: 10px;
+        border-style: solid;
+        border-top-style: none;
+        background-color: rgb(64, 64, 64);
+        border-color: rgb(64, 64, 64);
     }
 
     .element {
         max-width: 4rem;
         border-style: solid;
+        border-radius: 10px;
         border-width: 1px;
+        border-color: rgb(64, 64, 64);
+        background-color: rgb(64, 64, 64);
     }
 
     .winner {
@@ -60,7 +69,8 @@
         height: 4rem;
         margin-bottom: 10px;
         border-style: none;
-        background-color: var(--color-background);
+        background-color: rgb(64, 64, 64);
+        border-radius: 10px;
     }
 
     .insert-button:active {
