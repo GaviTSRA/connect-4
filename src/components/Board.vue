@@ -5,7 +5,7 @@
     
     const jsConfetti = new JSConfetti()
     defineEmits(["insert"])
-    let props = defineProps(["board", "finished", "winner", "turn"])
+    let props = defineProps(["board", "finished", "winner", "turn", "users"])
 
     watch(
         () => props.winner, 
@@ -18,7 +18,7 @@
 
 <template>
     <p v-if="props.winner == 3" class="winner">Draw!</p>
-    <p v-if="props.finished && props.winner != 3" class="winner">{{ props.winner == 1 ? "Green" : "Red" }} won!</p>
+    <p v-if="props.finished && props.winner != 3" class="winner">{{ props.winner == 1 ? props.users[0] : props.users[1] }} won!</p>
     <div class="board">
         <div v-for="(column, index) in props.board">
             <button class="insert-button" v-if="!props.finished" @click="$emit('insert', index)">
