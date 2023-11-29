@@ -17,6 +17,8 @@
     let gameFinished = ref(false)
     let turn = ref(false)
     let other = $cookies.get("other")
+    let username = ref($cookies.get("username"))
+    let host = ref(false)
 
     let ws = useWS()
     ws.conn.onmessage = (msg) => {
@@ -33,6 +35,10 @@
         if (args[0] == "turn") {
             turn.value = args[1]
         }
+        if (args[0] == "host") {
+            if (args[1] == username.value) host.value = true
+            else host.value = false
+        }
     }
     ws.conn.send("check " + $cookies.get("game"))
 
@@ -44,12 +50,19 @@
 <template>
     <div class="game">
         <BackButton/>
-        <p class="other">VS {{ other }}</p>
+        <p class="other" v-if="host"><span class="user">{{ username }}</span> VS <span class="otherUser">{{ other }}</span></p>
+        <p class="other" v-if="!host"><span class="otherUser">{{ username }}</span> VS <span class="user">{{ other }}</span></p>
         <Board @insert="(col) => insert(col)" :board="board" :finished="gameFinished" :winner="winner" :turn="turn"/>
     </div>
 </template>
 
 <style>
+    .user {
+        color: green;
+    }
+    .otherUser {
+        color: red;
+    }
     .other {
         position: absolute;
         top: 2rem;

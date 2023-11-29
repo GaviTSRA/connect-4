@@ -190,6 +190,8 @@ app.ws("/connect", (ws: WebSocket) => {
                 ws.send("turn 1")
             else
                 ws.send("turn 0")
+
+            ws.send("host " + games[id][0])
         }
 
         else if (command == "turn" && args.length == 3) {
