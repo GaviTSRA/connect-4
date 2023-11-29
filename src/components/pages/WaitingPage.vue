@@ -48,7 +48,7 @@ import { useWS } from "../../stores/ws";
         position: absolute;
         left: 0;
         bottom: 0;
-        font-size: 5rem;
+        font-size: 5vw;
     }
 
     .label {
