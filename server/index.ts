@@ -1,11 +1,11 @@
-import express from "express"
-import expressWs from "express-ws"
-const app = expressWs(express()).app
-const port = 3000
 import cors from "cors"
 import WebSocket from "ws"
+import express from "express"
+import expressWs from "express-ws"
 
-// ID -> [usera, userb, board, useraws, userbws, turn(0 or 1), public?]
+const app = expressWs(express()).app
+const port = 3000
+
 let games: { [id: string] : [usera: string, userb: string | undefined, board: number[][], useraWS: WebSocket, userbWS: WebSocket | undefined, turn: number, isPublic: boolean]} = {}
 
 function update(board: number[][]) {
