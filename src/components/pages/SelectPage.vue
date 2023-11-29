@@ -9,6 +9,14 @@
     let ws = useWS()
     
     if (ws.conn == undefined) {
+        connect()
+    }
+
+    function go(loc) {
+        window.location.hash = loc
+    }
+
+    function connect() {
         ws.conn = new WebSocket("ws://localhost:3000/connect")
         ws.conn.addEventListener("open", (event => {
             connected.value = true
@@ -19,10 +27,6 @@
         ws.conn.addEventListener("close", (event => {
             connected.value = false
         }))
-    }
-
-    function go(loc) {
-        window.location.hash = loc
     }
 </script>
 
@@ -38,13 +42,20 @@
         <button class="btn-online-create" @click="go('/play/online/create')" :disabled="!connected">Create game</button>
         <button class="btn-online-join" @click="go('/play/online/join')" :disabled="!connected">Join game</button>
         <p class="connectedDisplay">{{ connected ? "Connected" : "Not connected" }}</p>
+        <button class="reconnect" @click="connect" v-if="!connected">Reconnect</button>
     </div>
 </template>
 
 <style scoped>
-    .connectedDisplay {
+    .reconnect {
         position: absolute;
         bottom: 0;
+        left: 7rem;
+        height: 2rem;
+    }
+    .connectedDisplay {
+        position: absolute;
+        bottom: 1rem;
         left: 0;
     }
 
