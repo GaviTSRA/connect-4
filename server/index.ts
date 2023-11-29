@@ -181,6 +181,7 @@ app.ws("/connect", (ws: WebSocket) => {
 
         else if (command == "check" && args.length == 2) {
             const id: string = args[1]
+            if (!games[id]) return
             const turn: number = games[id][5]
             const isFirstUser: boolean = games[id][0] == username
             if (!isFirstUser && games[id][1] != username) return
@@ -199,7 +200,6 @@ app.ws("/connect", (ws: WebSocket) => {
             const action: number = parseInt(args[2])
             if (!games[id]) return
             const turn: number = games[id][5]
-
 
             if (games[id][turn] == username) {
                 let board = games[id][2]
