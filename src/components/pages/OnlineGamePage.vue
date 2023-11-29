@@ -16,6 +16,7 @@
     let winner = ref([0])
     let gameFinished = ref(false)
     let turn = ref(false)
+    let other = $cookies.get("other")
 
     let ws = useWS()
     ws.conn.onmessage = (msg) => {
@@ -43,11 +44,18 @@
 <template>
     <div class="game">
         <BackButton/>
+        <p class="other">VS {{ other }}</p>
         <Board @insert="(col) => insert(col)" :board="board" :finished="gameFinished" :winner="winner" :turn="turn"/>
     </div>
 </template>
 
 <style>
+    .other {
+        position: absolute;
+        top: 2rem;
+        font-size: 2rem;
+    }
+
     .game {
         width: 100%;
         display:flex;
