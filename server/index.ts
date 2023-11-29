@@ -197,9 +197,9 @@ app.ws("/connect", (ws: WebSocket) => {
         else if (command == "turn" && args.length == 3) {
             const id: string = args[1]
             const action: number = parseInt(args[2])
+            if (!games[id]) return
             const turn: number = games[id][5]
 
-            if (!games[id]) return
 
             if (games[id][turn] == username) {
                 let board = games[id][2]
