@@ -1,6 +1,7 @@
 <script setup>    
     import Cell from "./Cell.vue"
     
+    defineEmits(["insert"])
     let props = defineProps(["board", "finished", "winner", "turn"])
 </script>
 

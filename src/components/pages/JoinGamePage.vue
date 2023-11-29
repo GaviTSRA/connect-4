@@ -15,10 +15,8 @@
             $cookies.set("other", args[1])
             window.location.hash = "/play/online/waiting"
         }
-        console.log(args)
         if (args[0] == "games") {
             games.value = JSON.parse(args[1])
-            console.log(games.value)
         }
     }
 
