@@ -108,7 +108,7 @@ function makeID(length: number) {
 
 app.use(cors())
 
-app.ws("/connect", (ws: WebSocket, req: any) => {
+app.ws("/connect", (ws: WebSocket) => {
     let username: string | undefined = undefined
     ws.on('message', (message: string) => {
         const args: string[] = message.split(" ")
