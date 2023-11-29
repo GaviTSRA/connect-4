@@ -110,6 +110,20 @@ app.use(cors())
 
 app.ws("/connect", (ws: WebSocket) => {
     let username: string | undefined = undefined
+    let gameID: string | undefined = undefined
+    ws.on("close", () => {
+        if (!gameID || !games[gameID] || games[gameID][1] == undefined) return
+        console.log("Disconnect, ending " + gameID)
+        const isFirstUser: boolean = games[gameID][0] == username
+        if (isFirstUser) {
+            games[gameID][4]?.send("turn 0")
+            games[gameID][4]?.send("winner 2")
+        } else {
+            games[gameID][3].send("turn 0")
+            games[gameID][3].send("winner 1")
+        }
+        delete games[gameID]
+    })
     ws.on('message', (message: string) => {
         const args: string[] = message.split(" ")
         const command: string = args[0]
@@ -142,6 +156,7 @@ app.ws("/connect", (ws: WebSocket) => {
                 0,
                 args[1] == "1"
             ]
+            gameID = id
             ws.send("success "+id)
             console.log(`Created game ${id} for ${username} (public: ${args[1] == "1"})`)
         }
@@ -156,6 +171,7 @@ app.ws("/connect", (ws: WebSocket) => {
                 ws.send("error gamefull")
                 return
             }
+            gameID = id
             games[id][1] = username
             games[id][4] = ws
             games[id][3].send("join "+username)

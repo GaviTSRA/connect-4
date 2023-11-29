@@ -1,6 +1,10 @@
 <script setup>
+    import { useWS } from '../stores/ws';
+    const ws = useWS()
+
     function back() {
-        window.location.hash = "/"
+        ws.conn.close()
+        window.location.hash = ""
     }
 </script>
 

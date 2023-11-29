@@ -10,7 +10,7 @@
     watch(
         () => props.winner, 
         () => {
-            if(props.winner == 0) return
+            if(props.winner == 0) return 
             if(props.turn == 1) return
             jsConfetti.addConfetti()
     })
