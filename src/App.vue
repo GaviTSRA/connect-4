@@ -9,6 +9,7 @@ import JoinGamePage from "./components/pages/JoinGamePage.vue"
 import OnlineGamePage from "./components/pages/OnlineGamePage.vue"
 
 const routes = {
+  "": SelectPage,
   "/": SelectPage,
   "/play/local/multiplayer": LocalMultiplayerPage,
   "/play/online/create": CreateGamePage,
