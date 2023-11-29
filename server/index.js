@@ -4,7 +4,7 @@ const port = 3000
 const cors = require("cors")
 var expressWs = require('express-ws')(app)
 
-// ID -> [usera, userb, board, useraws, userbws, turn(0 or 1)]
+// ID -> [usera, userb, board, useraws, userbws, turn(0 or 1), public?]
 const games = {}
 
 function update(board) {
@@ -118,12 +118,12 @@ app.ws("/connect", (ws, req) => {
             console.log("Set name: " + username)
             ws.send("success")
         }
-        if (command == "new" && username != undefined) {
+        if (command == "new" && username != undefined && args.length == 2) {
             let id = makeID(5)
             while (id in games) {
                 id = makeID(5)
             }
-            console.log(`Created game ${id} for ${username}`)
+            console.log(`Created game ${id} for ${username} (public: ${args[1] == "1"})`)
             games[id] = [
                 username,
                 undefined,
@@ -138,7 +138,8 @@ app.ws("/connect", (ws, req) => {
                 ],
                 ws,
                 undefined,
-                1
+                0,
+                args[1] == "1"
             ]
             ws.send("success "+id)
         }
@@ -191,6 +192,16 @@ app.ws("/connect", (ws, req) => {
                 if (turn == 1) games[id][5] = 0
                 else games[id][5] = 1
             }
+        }
+        if (command == "games") {
+            let publicGames = []
+            for (const [key, value] of Object.entries(games)) {
+                if (value[6] && value[1] == undefined) {
+                    publicGames.push([key, value[0]])
+                }
+            }
+            console.log("games " + publicGames.length)
+            ws.send("games " + JSON.stringify(publicGames))
         }
     })
 })
