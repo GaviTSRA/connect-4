@@ -80,7 +80,7 @@
 
     button[disabled] {
         background-color: rgb(65, 65, 65);
-        color: black;
+        color: rgb(33, 40, 40);
     }
 
     .btn-local-singleplayer {
