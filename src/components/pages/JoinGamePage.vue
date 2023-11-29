@@ -3,7 +3,9 @@
     import BackButton from "../BackButton.vue";
     import { useWS } from "../../stores/ws";
 
-    let username = ref($cookies.get("username"))
+    let username = ref(" ")
+    if($cookies.isKey("username"))
+        username.value = $cookies.get("username")
     let id = ref("")
     let status = ref(0)
 
