@@ -3,7 +3,8 @@
     const ws = useWS()
 
     function back() {
-        ws.conn.close()
+        if (ws.conn != undefined)
+            ws.conn.close()
         window.location.hash = ""
     }
 </script>
