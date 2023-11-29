@@ -38,6 +38,7 @@
 
 <style scoped>
     .checkbox {
+        transform: scale(1.5);
         float: left;
         margin-top: 10px;
         margin-right: 10px;
