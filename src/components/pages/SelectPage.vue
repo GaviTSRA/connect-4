@@ -7,10 +7,7 @@
     let connected = ref(false)
 
     let ws = useWS()
-    
-    if (ws.conn == undefined) {
-        connect()
-    }
+    connect()
 
     function go(loc) {
         window.location.hash = loc
