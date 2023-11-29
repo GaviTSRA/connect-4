@@ -155,18 +155,27 @@ app.ws("/connect", (ws, req) => {
             games[id][1] = username
             games[id][4] = ws
             games[id][3].send("join "+username)
-            let board = games[id][3]
-            games[id][3].send("board "+board)
             console.log(`${username} joined ${id}`)
             ws.send("success " + games[id][0])
-            ws.send("board " + board)
+        }
+        if (command == "check" && args.length == 2) {
+            let id = args[1]
+            let turn = games[id][5]
+            let isFirstUser = games[id][0] == username
+            if (!isFirstUser && games[id][1] != username) return
+            if (turn == 0 && isFirstUser)
+                ws.send("turn 1")
+            else if (turn == 1 && !isFirstUser)
+                ws.send("turn 1")
+            else
+                ws.send("turn 0")
         }
         if (command == "turn" && args.length == 3) {
             let id = args[1]
-            let turn = game[id][5]
-            let action = args[6]
+            let turn = games[id][5]
+            let action = args[2]
             if (games[id][turn] == username) {
-                let board = game[id][2]
+                let board = games[id][2]
                 board[action][0] = turn+1
                 board = update(board)
                 games[id][2] = board
@@ -179,8 +188,8 @@ app.ws("/connect", (ws, req) => {
                     games[id][4].send("winner " + winner)   
                 }
 
-                if (turn == 2) games[id][5] = 1
-                else games[id][5] = 2
+                if (turn == 1) games[id][5] = 0
+                else games[id][5] = 1
             }
         }
     })

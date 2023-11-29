@@ -1,7 +1,7 @@
 <script setup>    
     import Cell from "./Cell.vue"
     
-    let props = defineProps(["board", "finished", "winner"])
+    let props = defineProps(["board", "finished", "winner", "turn"])
 </script>
 
 <template>
@@ -9,7 +9,7 @@
     <p v-if="props.finished && props.winner != 3" class="winner">{{ props.winner == 1 ? "Green" : "Red" }} won!</p>
     <div class="board">
         <div v-for="(column, index) in props.board">
-            <button class="insert-button" v-if="!props.finished" @click="$emit('insert', index)">
+            <button class="insert-button" v-if="!props.finished && props.turn == 1" @click="$emit('insert', index)">
                 <img v-if="props.board[index][0] == 0" src="arrow.png"/>
             </button>
             <div class="element" v-for="element in column">
