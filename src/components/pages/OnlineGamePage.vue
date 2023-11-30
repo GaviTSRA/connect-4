@@ -71,7 +71,7 @@
     }
     .other {
         position: absolute;
-        top: 2rem;
+        top: 1rem;
         font-size: 2rem;
     }
 
