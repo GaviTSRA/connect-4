@@ -2,7 +2,7 @@ import cors from "cors"
 import WebSocket from "ws"
 import express from "express"
 import expressWs from "express-ws"
-import { update, checkWin } from "../src/board"
+import { update, checkWin, getNextMove } from "../src/board"
 
 const app = expressWs(express()).app
 const port = 3000
@@ -41,6 +41,7 @@ app.ws("/connect", (ws: WebSocket) => {
         }
         delete games[gameID]
     })
+
     ws.on('message', (message: string) => {
         const args: string[] = message.split(" ")
         const command: string = args[0]
@@ -148,6 +149,53 @@ app.ws("/connect", (ws: WebSocket) => {
             }
             console.log("games " + publicGames.length)
             ws.send("games " + JSON.stringify(publicGames))
+        }
+    })
+})
+
+app.ws("/bot", (ws: WebSocket) => {
+    let game = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0]
+    ]
+    let turn = 1
+    
+    ws.on("close", () => {
+
+    })
+
+    ws.on('message', (message: string) => {
+        const args: string[] = message.split(" ")
+        const command: string = args[0]
+
+        if (command == "turn" && turn == 1 && args.length == 2) {
+            const col = parseInt(args[1])
+            turn = 2
+            if (game[col][0] != 0) return
+            game[col][0] = 1
+            game = update(game)
+            ws.send("board " + JSON.stringify(game))
+
+            if (checkWin(game) == 1) {
+                ws.send("winner 1")
+                // TODO update leaderboard
+                return
+            }
+
+            const nextMove = getNextMove(game)
+            game[nextMove][0] = 2
+            game = update(game)
+            ws.send("board " + JSON.stringify(game))
+            turn = 1
+
+            if (checkWin(game) == 2) {
+                ws.send("winner 2")
+            }
         }
     })
 })

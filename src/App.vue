@@ -7,6 +7,7 @@ import WaitingPage from "./components/pages/WaitingPage.vue"
 import JoinGamePage from "./components/pages/JoinGamePage.vue"
 import OnlineGamePage from "./components/pages/OnlineGamePage.vue"
 import SingleplayerPage from "./components/pages/SingleplayerPage.vue"
+import OnlineSingleplayerPage from "./components/pages/OnlineSingleplayerPage.vue"
 
 const routes = {
   "": SelectPage,
@@ -15,7 +16,8 @@ const routes = {
   "/play/local/singleplayer": SingleplayerPage,
   "/play/online/waiting": WaitingPage,
   "/play/online/join": JoinGamePage,
-  "/play/online/game": OnlineGamePage
+  "/play/online/game": OnlineGamePage,
+  "/play/online/bot": OnlineSingleplayerPage
 }
 
 const currentPath = ref(window.location.hash)
