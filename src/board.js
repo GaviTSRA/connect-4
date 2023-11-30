@@ -115,15 +115,28 @@ function getNextMove(board) {
         if (checkWinningMove(copy, options, 1) != -1) continue
 
         for (let optionNext of options) {
+            if (copy[optionNext][0] != 0) continue
             let copyNext = copyBoard(copy)
             copyNext[optionNext][0] = 1
             copyNext = update(copyNext)
 
-            const possibleWin = checkWinningMove(copyNext, options, 1)
-            if (possibleWin != -1) {
-                copyNext[possibleWin][0] = 2
-                copyNext = update(copyNext)
-                if (checkWinningMove(copyNext, options, 1) != -1) continue outer
+            if(checkHasDoubleWin(copyNext, options)) continue outer
+
+            for (let optionNext2 of options) {
+                if (copyNext[optionNext2] != 0) continue
+                let copyNext2 = copyBoard(copyNext)
+                copyNext2[optionNext2][0] = 2
+                copyNext2 = update(copyNext2)
+                if (checkWinningMove(copyNext2, options, 1) != -1) continue
+
+                for (let optionNext3 of options) {
+                    if (copyNext2[optionNext3] != 0) continue
+                    let copyNext3 = copyBoard(copyNext2)
+                    copyNext3[optionNext3][0] = 1
+                    copyNext3 = update(copyNext3)
+
+                    if(checkHasDoubleWin(copyNext3, options)) continue outer
+                }
             }
         }
         finalOptions.push(option)
@@ -135,6 +148,16 @@ function getNextMove(board) {
     // If no good move is found, choose one at random
     let chosen =  finalOptions[Math.floor(Math.random()*finalOptions.length)]
     return chosen;
+}
+
+function checkHasDoubleWin(board, options) {
+    const possibleWin = checkWinningMove(board, options, 1)
+    if (possibleWin != -1) {
+        board[possibleWin][0] = 2
+        board = update(board)
+        if (checkWinningMove(board, options, 1) != -1) return true
+    }
+    return false
 }
 
 function checkWinningMove(board, options, user) {
