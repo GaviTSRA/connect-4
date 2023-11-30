@@ -22,11 +22,11 @@
     <p v-if="props.finished && props.winner != 3" class="winner">{{ props.winner == 1 ? props.users[0] : props.users[1] }} won!</p>
     <div class="board">
         <div class="column" v-for="(column, index) in props.board">
-            <button class="insert-button" v-if="!props.finished" @click="$emit('insert', index)">
+            <button class="insert-button" v-if="!props.finished" @click="$emit('insert', index)" @touchend="$emit('insert', index)">
                 <img v-if="props.board[index][0] == 0 && props.turn == 1" src="/arrow.png"/>
             </button>
             <div class="element" v-for="element in column">
-               <Cell :value="element"/>
+               <Cell @click="$emit('insert', index)" @touchend="$emit('insert', index)" :value="element"/>
             </div>
         </div>
     </div>
