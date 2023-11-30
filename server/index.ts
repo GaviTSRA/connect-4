@@ -112,15 +112,17 @@ app.ws("/connect", (ws: WebSocket) => {
     let username: string | undefined = undefined
     let gameID: string | undefined = undefined
     ws.on("close", () => {
-        if (!gameID || !games[gameID] || games[gameID][1] == undefined) return
+        if (!gameID || !games[gameID]) return
         console.log("Disconnect, ending " + gameID)
-        const isFirstUser: boolean = games[gameID][0] == username
-        if (isFirstUser) {
-            games[gameID][4]?.send("turn 0")
-            games[gameID][4]?.send("winner 2")
-        } else {
-            games[gameID][3].send("turn 0")
-            games[gameID][3].send("winner 1")
+        if (games[gameID][1] != undefined) {
+            const isFirstUser: boolean = games[gameID][0] == username
+            if (isFirstUser) {
+                games[gameID][4]?.send("turn 0")
+                games[gameID][4]?.send("winner 2")
+            } else {
+                games[gameID][3].send("turn 0")
+                games[gameID][3].send("winner 1")
+            }
         }
         delete games[gameID]
     })
