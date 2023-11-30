@@ -16,7 +16,9 @@
 <style scoped>
     .cell {
         background-color: var(--color);
-        padding: 1.9rem;
         border-radius: 50px;
+        height: 98%;
+        width: 98%;
+        padding: 1%;
     }
 </style>

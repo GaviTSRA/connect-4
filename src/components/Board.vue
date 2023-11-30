@@ -21,7 +21,7 @@
     <p v-if="props.winner == 3" class="winner">Draw!</p>
     <p v-if="props.finished && props.winner != 3" class="winner">{{ props.winner == 1 ? props.users[0] : props.users[1] }} won!</p>
     <div class="board">
-        <div v-for="(column, index) in props.board">
+        <div class="column" v-for="(column, index) in props.board">
             <button class="insert-button" v-if="!props.finished" @click="$emit('insert', index)">
                 <img v-if="props.board[index][0] == 0 && props.turn == 1" src="/arrow.png"/>
             </button>
@@ -33,8 +33,10 @@
 </template>
 
 <style scoped>
+    .column {
+        width: 6vw;
+    }
     .board {
-        max-width: 30rem;
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         justify-content: center;
@@ -47,7 +49,9 @@
     }
 
     .element {
-        max-width: 4rem;
+        display: grid;
+        width: 100%;
+        height: 6vw;
         border-style: solid;
         border-radius: 10px;
         border-width: 1px;
@@ -66,8 +70,8 @@
     }
 
     .insert-button {
-        width: 4rem;
-        height: 4rem;
+        width: 6vw;
+        height: 6vw;
         margin-bottom: 10px;
         border-style: none;
         background-color: rgb(64, 64, 64);
@@ -79,7 +83,7 @@
     }
 
     img {
-       width: 3.5rem; 
+       width: 6vw; 
     }
 
     img:hover {

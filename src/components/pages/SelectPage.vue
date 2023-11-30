@@ -61,10 +61,11 @@
     }
 
     button {
-        min-width: 7rem;
+        min-width: 20vw;
+        min-height: min(max(10vh, 1rem), 1rem);
+        font-size: min(max(3vw, 1.5rem), 3rem);
         margin: 10px;
         height: 40%;
-        font-size: large;
         padding: 0px 1rem;
         border-style: none;
         border-radius: 10px;
@@ -103,6 +104,7 @@
     h1 {
         text-align: center;
         user-select: none;
+        font-size: min(max(3vw, 1.5rem), 3rem);
     }
 
     .seperator {

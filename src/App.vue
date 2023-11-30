@@ -1,6 +1,5 @@
 <script setup>
 import SelectPage from "./components/pages/SelectPage.vue"
-import CreateGamePage from "./components/pages/CreateGamePage.vue"
 import LocalMultiplayerPage from "./components/pages/LocalMultiplayerPage.vue"
 import NotFoundPage from "./components/pages/NotFoundPage.vue"
 import { ref, computed } from "vue"
@@ -14,7 +13,6 @@ const routes = {
   "/": SelectPage,
   "/play/local/multiplayer": LocalMultiplayerPage,
   "/play/local/singleplayer": SingleplayerPage,
-  "/play/online/create": CreateGamePage,
   "/play/online/waiting": WaitingPage,
   "/play/online/join": JoinGamePage,
   "/play/online/game": OnlineGamePage

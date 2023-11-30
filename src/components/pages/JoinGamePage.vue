@@ -12,6 +12,9 @@
     let ispPublic = ref(false)
 
     let ws = useWS()
+
+    if (ws.conn == undefined) window.location.hash = ""
+
     ws.conn.onmessage = (msg) => {
         let args = msg.data.split(" ")
         if (args[0] == "error") status.value = args[1]
@@ -65,8 +68,8 @@
         <input v-model="username" type="text" id="name" name="name">
         <div class="publicGames">
             <div v-for="game in games" class="game">
-                <p class="gameID">{{ game[0] }}</p>
                 <p class="gameUser">{{ game[1] }}</p>
+                <p class="gameID">{{ game[0] }}</p>
                 <button class="joinBtn" @click="join(game[0])" :disabled="username.length < 3">Join</button>
             </div>
             <p v-if="games.length == 0">No public games!</p>
@@ -92,8 +95,9 @@
 </template>
 
 <style scoped>
-    .createLabel {
-        height:24px;
+    label {
+        height: 3rem;
+        font-size:2rem;
     }
 
     .create {
@@ -128,7 +132,7 @@
 
      .checkbox {
         margin-bottom: 10px;
-        transform: scale(1.5);
+        transform: scale(2);
         float: left;
         margin-top: 10px;
         margin-right: 10px;
@@ -137,7 +141,7 @@
     }
 
     .checkbox-label {
-        margin-top: 5px;
+        font-size: 1.5rem;
     }
 
     .gameID {
@@ -149,12 +153,13 @@
     }
 
     .joinBtn {
+        padding: 1rem 1.5rem;
         margin-left: 20px;
-        padding: .5rem 1rem;
         background-color: var(--color-background-mute);
         color: aqua;
         border:none;
         border-radius: 10px;
+        font-size: 2rem;
     }
 
     .joinBtn:hover:not([disabled]) {
@@ -172,11 +177,12 @@
     }
 
     .game {
+        font-size: 2rem;
         margin-top: 10px;
         display: flex;
         flex-direction: row;
         border-style: solid;
-        padding: .75rem;
+        padding: .5rem;
         border-radius: 10px;
         border-color: var(--vt-c-indigo);
         background-color: var(--vt-c-indigo);
@@ -207,6 +213,7 @@
 
     input[type="text"] {
         margin-bottom: 20px;
+        font-size: 1rem;
     }
 
     input:focus {
@@ -214,8 +221,9 @@
     }
 
     .submit {
-        width: 10rem;
-        padding: 1rem 1rem;
+        width: 15rem;
+        font-size: 1.5rem;
+        padding: 1.5rem 3rem;
         background-color: var(--vt-c-indigo);
         color: aqua;
         border:none;
@@ -235,5 +243,6 @@
 
     .submit:disabled {
         background-color: gray;
+        color: rgb(52, 52, 52)
     }
 </style>
