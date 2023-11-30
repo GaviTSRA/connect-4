@@ -45,11 +45,16 @@
 
 <style scoped>
     .reconnect {
+        min-width: 0;
+        padding: 0;
         position: absolute;
         bottom: 0;
         left: 7rem;
         height: 2rem;
+        font-size: large;
+        width: 10rem;
     }
+
     .connectedDisplay {
         position: absolute;
         bottom: 1rem;
@@ -120,4 +125,5 @@
         background-color: var(--color-background);
         padding:0 10px; 
     }
+
 </style>
