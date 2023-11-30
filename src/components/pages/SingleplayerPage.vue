@@ -20,6 +20,7 @@
         else toSet = 2
         board.value[column][0] = toSet
         board.value = update(board.value)
+        board.value = JSON.parse(JSON.stringify(update(board.value)))
         last.value = toSet
 
         winner.value = checkWin(board.value)
@@ -30,7 +31,9 @@
         if (bot) return
         
         let move = getNextMove(board.value)
-        insert(move, true)
+        setTimeout(() => {
+            insert(move, true)
+        }, 500)
     }
 
     function reset() {

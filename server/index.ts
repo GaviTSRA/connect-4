@@ -187,15 +187,17 @@ app.ws("/bot", (ws: WebSocket) => {
                 return
             }
 
-            const nextMove = getNextMove(game)
-            game[nextMove][0] = 2
-            game = update(game)
-            ws.send("board " + JSON.stringify(game))
-            turn = 1
-
-            if (checkWin(game) == 2) {
-                ws.send("winner 2")
-            }
+            setTimeout(() => {
+                const nextMove = getNextMove(game)
+                game[nextMove][0] = 2
+                game = update(game)
+                ws.send("board " + JSON.stringify(game))
+                turn = 1
+    
+                if (checkWin(game) == 2) {
+                    ws.send("winner 2")
+                }
+            }, 500)
         }
     })
 })

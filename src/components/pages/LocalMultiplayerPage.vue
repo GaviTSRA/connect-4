@@ -18,7 +18,7 @@
         if (last == 2) toSet = 1
         else toSet = 2
         board.value[column][0] = toSet
-        board.value = update(board.value)
+        board.value = JSON.parse(JSON.stringify(update(board.value)))
         last = toSet
 
         winner.value = checkWin(board.value)

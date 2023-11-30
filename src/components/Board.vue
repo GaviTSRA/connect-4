@@ -1,11 +1,23 @@
 <script setup>    
     import Cell from "./Cell.vue"
-    import { watch } from "vue"
+    import { watch, ref } from "vue"
     import JSConfetti from "js-confetti"
     
     const jsConfetti = new JSConfetti()
-    defineEmits(["insert"])
+    let emit = defineEmits(["insert"])
     let props = defineProps(["board", "finished", "winner", "turn", "users"])
+    let enter = ref(false)
+    let lastBoard = ref([
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0]
+    ])
+    let newColumn = ref(0)
+    let newRow = ref(0)
 
     watch(
         () => props.winner, 
@@ -15,6 +27,29 @@
             if (props.turn == 1) return
             jsConfetti.addConfetti()
     })
+
+    watch(
+        () => props.board,
+        () => {
+            for (let row=0; row<6; row++) {
+                for (let column=0; column<7; column++) {
+                    if (lastBoard.value[column][row] != props.board[column][row]) {
+                        newColumn.value = column
+                        newRow.value = row
+                    }
+                }
+            }
+            enter.value = true
+            setTimeout(() => {
+                enter.value = false
+            }, 190)
+            lastBoard.value = JSON.parse(JSON.stringify(props.board))
+        }
+    )
+
+    function insert(index) {
+        emit("insert", index)
+    }
 </script>
 
 <template>
@@ -22,17 +57,40 @@
     <p v-if="props.finished && props.winner != 3" class="winner">{{ props.winner == 1 ? props.users[0] : props.users[1] }} won!</p>
     <div class="board">
         <div class="column" v-for="(column, index) in props.board">
-            <button class="insert-button" v-if="!props.finished" @click="$emit('insert', index)" @touchend="$emit('insert', index)">
+            <button class="insert-button" v-if="!props.finished" @click="insert(index)" @touchend="insert(index)">
                 <img v-if="props.board[index][0] == 0 && props.turn == 1" src="/arrow.png"/>
             </button>
-            <div class="element" v-for="element in column">
-               <Cell @click="$emit('insert', index)" @touchend="$emit('insert', index)" :value="element"/>
+            <div class="element" v-for="(element, rowIndex) in column">
+               <!-- <Cell @click="insert(index)" @touchend="insert(index)" :value="element" /> -->
+               <Cell :class="{ anim: enter && newColumn == index && newRow == rowIndex}" @click="insert(index)" @touchend="insert(index)" :value="element" :hidden="element == 0"/>
+               <Cell class="secondaryCell" :value="0" :hidden="element != 0 && !(enter && newColumn == index && newRow == rowIndex)"/>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+    .secondaryCell {
+        z-index: 0;
+        position: absolute;
+        height: 6vw;
+        width: 6vw;
+    }
+    .anim {
+        animation: enter .2s linear;
+    }
+    @keyframes enter {
+        0% {
+            transform: translateY(-1000px);
+        }
+        50% {
+            transform: translateY(-500px);
+        }
+        100% {
+            transform: none;
+        }
+    }
+
     .column {
         width: 6vw;
     }
