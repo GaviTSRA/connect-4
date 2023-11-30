@@ -29,14 +29,14 @@
 
 <template>
     <div class="selection">
-        <button class="btn-local-singleplayer" @click="go('/play/local/singleplayer')">Bot</button>
+        <button class="btn-local-singleplayer" @click="go('/play/local/singleplayer')">Singleplayer</button>
         <button class="btn-local-multiplayer" @click="go('/play/local/multiplayer')">Multiplayer</button>
         <h1>Local</h1>
         
         <h2 class="seperator"><span>OR</span></h2>
         
         <h1>Online</h1>
-        <button class="btn-online-bot" @click="go('/play/online/bot')" :disabled="!connected">Bot</button>
+        <button class="btn-online-bot" @click="go('/play/online/bot')" :disabled="!connected">Singleplayer</button>
         <button class="btn-online-join" @click="go('/play/online/join')" :disabled="!connected">Multiplayer</button>
         <p class="connectedDisplay">{{ connected ? "Connected" : "Not connected" }}</p>
         <button class="reconnect" @click="connect" v-if="!connected">Reconnect</button>
