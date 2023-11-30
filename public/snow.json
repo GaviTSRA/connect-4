@@ -1,0 +1,40 @@
+{
+    "particles":{
+       "color":{
+          "value":"#fff"
+       },
+       "move":{
+          "direction":"bottom",
+          "enable":true,
+          "outModes":"out",
+          "speed":2
+       },
+       "number":{
+          "density":{
+             "enable":false,
+             "area":100
+          },
+          "value":200
+       },
+       "opacity":{
+          "value":{
+            "min":0.1,
+            "max":0.7
+          }
+       },
+       "shape":{
+          "type":"circle"
+       },
+       "size":{
+          "value":{
+            "min": 1,
+            "max": 4
+          }
+       },
+       "wobble":{
+          "enable":true,
+          "distance":10,
+          "speed":10
+       }
+    }
+}

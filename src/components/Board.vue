@@ -63,20 +63,25 @@
             <div class="element" v-for="(element, rowIndex) in column">
                <!-- <Cell @click="insert(index)" @touchend="insert(index)" :value="element" /> -->
                <Cell :class="{ anim: enter && newColumn == index && newRow == rowIndex}" @click="insert(index)" @touchend="insert(index)" :value="element" :hidden="element == 0"/>
-               <Cell class="secondaryCell" :value="0" :hidden="element != 0 && !(enter && newColumn == index && newRow == rowIndex)"/>
+               <Cell :class="{secondaryCell, absolute: enter && newColumn == index && newRow == rowIndex}" :value="0" :hidden="element != 0 && !(enter && newColumn == index && newRow == rowIndex)"/>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-    .secondaryCell {
-        z-index: 0;
+    .absolute {
         position: absolute;
-        height: 6vw;
-        width: 6vw;
+        height: 5.8vw;
+        width: 5.8vw;
+    }
+    .secondaryCell {
+        height: 5.8vw;
+        width: 5.8vw;
     }
     .anim {
+        height: 6vw;
+        width: 6vw;
         animation: enter .2s linear;
     }
     @keyframes enter {
