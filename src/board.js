@@ -90,34 +90,56 @@ function copyBoard(board) {
 
 function getNextMove(board) {
     let _options = [0, 1, 2, 3, 4, 5, 6]
+    
+    // Remove all full columns from possible placements
     let options = []
     for (let option of _options) {
         if (board[option][0] != 0) continue
         options.push(option)
     }
 
+    // Check if the bot could win
     let winningMove = checkWinningMove(board, options, 2)
     if (winningMove != -1) return winningMove
 
+    // Check if the opponent could win next turn
     let blockWinMove = checkWinningMove(board, options, 1)
     if (blockWinMove != -1) return blockWinMove
 
+    // Check that the bot doesn't create a win for the opponent in the next two turns
     let finalOptions = []
-    for (let option of options) {
+    outer: for (let option of options) {
         let copy = copyBoard(board)
         copy[option][0] = 2
         copy = update(copy)
-        if (checkWinningMove(copy, options, 1) == -1) finalOptions.push(option)
+        if (checkWinningMove(copy, options, 1) != -1) continue
+
+        for (let optionNext of options) {
+            let copyNext = copyBoard(copy)
+            copyNext[optionNext][0] = 1
+            copyNext = update(copyNext)
+
+            const possibleWin = checkWinningMove(copyNext, options, 1)
+            if (possibleWin != -1) {
+                copyNext[possibleWin][0] = 2
+                copyNext = update(copyNext)
+                if (checkWinningMove(copyNext, options, 1) != -1) continue outer
+            }
+        }
+        finalOptions.push(option)
     }
 
+    // If every move lets the opponent win, use all possible columns as options
     if (finalOptions.length == 0) finalOptions = options
-
+    
+    // If no good move is found, choose one at random
     let chosen =  finalOptions[Math.floor(Math.random()*finalOptions.length)]
     return chosen;
 }
 
 function checkWinningMove(board, options, user) {
     for (let option of options) {
+        if (board[option][0] != 0) continue
         let copy = copyBoard(board)
         copy[option][0] = user
         copy = update(copy)
