@@ -19,7 +19,6 @@
         let args = msg.data.split(" ")
         if (args[0] == "error") status.value = args[1]
         if (args[0] == "success" && args.length == 2 && !creating.value) {
-            console.log(args[1])
             $cookies.set("other", args[1])
             window.location.hash = "/play/online/waiting"
         }
@@ -147,6 +146,7 @@
 
     .gameID {
         color: white;
+        margin-left: 20px;
     }
     .gameUser {
         margin-left: 10px;
