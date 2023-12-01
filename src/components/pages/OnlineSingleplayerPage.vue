@@ -23,6 +23,15 @@
     let username = ref($cookies.get("username"))
 
     let ws = new WebSocket("ws://localhost:3000/bot")
+
+    ws.onopen = () => {
+        ws.send("username " + username.value)
+    }
+
+    ws.onclose = () => {
+        window.location.hash = ""
+    }
+
     ws.onmessage = (msg) => {
         let args = msg.data.split(" ")
         if (args[0] == "board") {

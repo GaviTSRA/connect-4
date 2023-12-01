@@ -27,16 +27,19 @@ app.ws("/connect", (ws: WebSocket) => {
     let username: string | undefined = undefined
     let gameID: string | undefined = undefined
     ws.on("close", () => {
+        if (username == undefined) return
         if (!gameID || !games[gameID]) return
-        console.log("Disconnect, ending " + gameID)
+
         if (games[gameID][1] != undefined) {
             const isFirstUser: boolean = games[gameID][0] == username
             if (isFirstUser) {
                 games[gameID][4]?.send("turn 0")
                 games[gameID][4]?.send("winner 2")
+                console.log(`[${gameID}] ${username} disconnected, ${games[gameID][1]} won`)
             } else {
                 games[gameID][3].send("turn 0")
                 games[gameID][3].send("winner 1")
+                console.log(`[${gameID}] ${username} disconnected, ${games[gameID][0]} won`)
             }
         }
         delete games[gameID]
@@ -49,7 +52,7 @@ app.ws("/connect", (ws: WebSocket) => {
         if (command == "username" && args.length == 2) {
             username = args[1]
             ws.send("success")
-            console.log("Set name: " + username)
+            console.log("[Online Login] " + username)
         }
 
         else if (command == "new" && username != undefined && args.length == 2) {
@@ -76,7 +79,7 @@ app.ws("/connect", (ws: WebSocket) => {
             ]
             gameID = id
             ws.send("success "+id)
-            console.log(`Created game ${id} for ${username} (public: ${args[1] == "1"})`)
+            console.log(`[${id}] Created by ${username} (public: ${args[1] == "1"})`)
         }
 
         else if (command == "join" && username != undefined && args.length == 2) {
@@ -94,7 +97,7 @@ app.ws("/connect", (ws: WebSocket) => {
             games[id][4] = ws
             games[id][3].send("join "+username)
             ws.send("success " + games[id][0])
-            console.log(`${username} joined ${id}`)
+            console.log(`[${id}] ${username} joined`)
         }
 
         else if (command == "check" && args.length == 2) {
@@ -122,6 +125,9 @@ app.ws("/connect", (ws: WebSocket) => {
             if (games[id][turn] == username) {
                 let board = games[id][2]
                 if(board[action][0] != 0) return
+
+                console.log(`[${id}] ${username} played ${action}`)
+
                 board[action][0] = turn+1
                 board = update(board)
                 games[id][2] = board
@@ -132,6 +138,7 @@ app.ws("/connect", (ws: WebSocket) => {
                 if (winner != 0) {
                     games[id][3].send("winner " + winner)
                     games[id][4]?.send("winner " + winner)
+                    console.log(`[${id}] ${games[id][winner-1]} won`)
                     delete games[id]
                     return
                 }
@@ -147,7 +154,6 @@ app.ws("/connect", (ws: WebSocket) => {
                     publicGames.push([key, value[0]])
                 }
             }
-            console.log("games " + publicGames.length)
             ws.send("games " + JSON.stringify(publicGames))
         }
     })
@@ -164,6 +170,7 @@ app.ws("/bot", (ws: WebSocket) => {
         [0, 0, 0, 0, 0, 0]
     ]
     let turn = 1
+    let username: string | undefined = undefined
     
     ws.on("close", () => {
 
@@ -173,10 +180,16 @@ app.ws("/bot", (ws: WebSocket) => {
         const args: string[] = message.split(" ")
         const command: string = args[0]
 
-        if (command == "turn" && turn == 1 && args.length == 2) {
+        if (command == "username" && args.length ==  2) {
+            username = args[1]
+            console.log(`[Bot Login] ${username}`)
+        } 
+
+        if (command == "turn" && turn == 1 && args.length == 2 && username != undefined) {
             const col = parseInt(args[1])
             turn = 2
             if (game[col][0] != 0) return
+            console.log(`[Bot ${username}] Played ${col}`)
             game[col][0] = 1
             game = update(game)
             ws.send("board " + JSON.stringify(game))
