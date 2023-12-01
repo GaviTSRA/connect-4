@@ -1,11 +1,12 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "npx tsc && node build/server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx tsc && node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPattern=./build"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "@types/express": "^4.17.21",
     "@types/express-ws": "^3.0.4",
     "@types/node": "^20.10.0",
+    "jest": "^29.7.0",
     "typescript": "^5.3.2"
   }
 }

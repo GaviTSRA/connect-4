@@ -2,7 +2,7 @@ import cors from "cors"
 import WebSocket from "ws"
 import express from "express"
 import expressWs from "express-ws"
-import { update, checkWin, getNextMove } from "../src/board"
+import { update, checkWin, getNextMove } from "../src/board.js"
 
 const app = expressWs(express()).app
 const port = 3000
