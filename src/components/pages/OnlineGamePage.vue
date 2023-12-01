@@ -4,7 +4,7 @@
     import Board from '../Board.vue';
     import { ref } from "vue"
 
-    if (!$cookies.isKey("username") || !$cookies.isKey("id"))
+    if (!$cookies.isKey("username") || !$cookies.isKey("game"))
         window.location.hash = ""
 
     let board = ref([
