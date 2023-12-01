@@ -19,11 +19,12 @@
         position: absolute;
         top: 0;
         left: 0;
-        height: 2rem;
-        width: 6rem;
+        height: 5vh;
+        width: 10vw;
         background-color: red;
         border-style: none;
         border-radius: 10px;
+        font-size: 2vw;
     }
     .button-back:hover {
         background-color: rgb(248, 40, 40);
