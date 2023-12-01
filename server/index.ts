@@ -7,7 +7,18 @@ import { update, checkWin, getNextMove } from "../src/board"
 const app = expressWs(express()).app
 const port = 3000
 
-let games: { [id: string] : [usera: string, userb: string | undefined, board: number[][], useraWS: WebSocket, userbWS: WebSocket | undefined, turn: number, isPublic: boolean]} = {}
+let games: { [id: string] : [
+    userA: string, 
+    userB: string | undefined, 
+    board: number[][], 
+    userAWS: WebSocket, 
+    userBWS: WebSocket | undefined, 
+    turn: number, 
+    isPublic: boolean,
+    isFinished: boolean,
+    userARematch: boolean,
+    userBRematch: boolean
+]} = {}
 
 function makeID(length: number) {
     let result = '';
@@ -30,16 +41,25 @@ app.ws("/connect", (ws: WebSocket) => {
         if (username == undefined) return
         if (!gameID || !games[gameID]) return
 
+        const isFirstUser: boolean = games[gameID][0] == username
         if (games[gameID][1] != undefined) {
-            const isFirstUser: boolean = games[gameID][0] == username
-            if (isFirstUser) {
-                games[gameID][4]?.send("turn 0")
-                games[gameID][4]?.send("winner 2")
-                console.log(`[${gameID}] ${username} disconnected, ${games[gameID][1]} won`)
+            if (games[gameID][7]) {
+                if (isFirstUser) {
+                    games[gameID][4]?.send("rematch -1")
+                } else {
+                    games[gameID][3].send("rematch -1")
+                }
+                console.log(`[${gameID}] Rematch canceled`)
             } else {
-                games[gameID][3].send("turn 0")
-                games[gameID][3].send("winner 1")
-                console.log(`[${gameID}] ${username} disconnected, ${games[gameID][0]} won`)
+                if (isFirstUser) {
+                    games[gameID][4]?.send("turn 0")
+                    games[gameID][4]?.send("winner 2")
+                    console.log(`[${gameID}] ${username} disconnected, ${games[gameID][1]} won`)
+                } else {
+                    games[gameID][3].send("turn 0")
+                    games[gameID][3].send("winner 1")
+                    console.log(`[${gameID}] ${username} disconnected, ${games[gameID][0]} won`)
+                }
             }
         }
         delete games[gameID]
@@ -75,7 +95,10 @@ app.ws("/connect", (ws: WebSocket) => {
                 ws,
                 undefined,
                 0,
-                args[1] == "1"
+                args[1] == "1",
+                false,
+                false,
+                false
             ]
             gameID = id
             ws.send("success "+id)
@@ -138,8 +161,8 @@ app.ws("/connect", (ws: WebSocket) => {
                 if (winner != 0) {
                     games[id][3].send("winner " + winner)
                     games[id][4]?.send("winner " + winner)
+                    games[id][7] = true
                     console.log(`[${id}] ${games[id][winner-1]} won`)
-                    delete games[id]
                     return
                 }
 
@@ -147,7 +170,48 @@ app.ws("/connect", (ws: WebSocket) => {
                 else games[id][5] = 1
             }
         }
-        if (command == "games") {
+
+        else if (command == "rematch" && args.length == 2) {
+            const id: string = args[1]
+            if (!games[id] || !games[id][7]) return
+
+            if (games[id][0] == username) {
+                games[id][8] = true
+                games[id][3].send("rematch 1")
+                games[id][4]?.send("rematch 1")
+                console.log(`[${gameID}] Rematch accepted by ${games[id][0]}`)
+            } else if (games[id][1] == username) {
+                games[id][9] = true
+                games[id][3].send("rematch 1")
+                games[id][4]?.send("rematch 1")
+                console.log(`[${gameID}] Rematch accepted by ${games[id][1]}`)
+            }
+
+            if (games[id][8] && games[id][9]) {
+                console.log(`[${gameID}] Rematch starting`)
+                games[id][2] = [
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0]
+                ],
+                games[id][5] = 0
+                games[id][7] = false
+                games[id][8] = false
+                games[id][9] = false
+
+                const board = games[id][2]
+                games[id][3].send("rematch 2")
+                games[id][4]?.send("rematch 2")
+                games[id][3].send("board " + JSON.stringify(board))
+                games[id][4]?.send("board " + JSON.stringify(board))
+            }
+        }
+
+        else if (command == "games") {
             let publicGames: [id: string, username: string][] = []
             for (const [key, value] of Object.entries(games)) {
                 if (value[6] && value[1] == undefined) {
