@@ -50,6 +50,7 @@
     )
 
     function insert(index) {
+        if (props.board[index][0] != 0) return
         if (inserted.value) return
         inserted.value = true
         emit("insert", index)
