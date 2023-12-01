@@ -4,15 +4,18 @@
     import Board from '../Board.vue';
     import { ref } from "vue"
 
+    if (!$cookies.isKey("username") || !$cookies.isKey("id"))
+        window.location.hash = ""
+
     let board = ref([
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0]
-        ])
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0]
+    ])
     let winner = ref([0])
     let gameFinished = ref(false)
     let turn = ref(false)

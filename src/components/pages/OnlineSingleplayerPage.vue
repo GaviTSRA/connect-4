@@ -16,6 +16,10 @@
     let winner = ref([0])
     let gameFinished = ref(false)
     let turn = ref(true)
+
+    if (!$cookies.isKey("username"))
+        window.location.hash = ""
+
     let username = ref($cookies.get("username"))
 
     let ws = new WebSocket("ws://localhost:3000/bot")

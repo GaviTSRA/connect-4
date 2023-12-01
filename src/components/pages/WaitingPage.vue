@@ -1,7 +1,10 @@
 <script setup>
     import { ref } from "vue"
-import BackButton from "../BackButton.vue";
-import { useWS } from "../../stores/ws";
+    import BackButton from "../BackButton.vue";
+    import { useWS } from "../../stores/ws";
+
+    if (!$cookies.isKey("username"))
+        window.location.hash = ""
 
     let username = $cookies.get("username")
     let other = ref("")
