@@ -18,6 +18,7 @@
     ])
     let newColumn = ref(0)
     let newRow = ref(0)
+    let inserted = ref(false)
 
     watch(
         () => props.winner, 
@@ -31,6 +32,7 @@
     watch(
         () => props.board,
         () => {
+            inserted.value = false
             for (let row=0; row<6; row++) {
                 for (let column=0; column<7; column++) {
                     if (lastBoard.value[column][row] != props.board[column][row]) {
@@ -48,6 +50,8 @@
     )
 
     function insert(index) {
+        if (inserted.value) return
+        inserted.value = true
         emit("insert", index)
     }
 </script>
@@ -63,7 +67,7 @@
             <div class="element" v-for="(element, rowIndex) in column">
                <!-- <Cell @click="insert(index)" @touchend="insert(index)" :value="element" /> -->
                <Cell :class="{ anim: enter && newColumn == index && newRow == rowIndex}" @click="insert(index)" @touchend="insert(index)" :value="element" :hidden="element == 0"/>
-               <Cell :class="{secondaryCell, absolute: enter && newColumn == index && newRow == rowIndex}" :value="0" :hidden="element != 0 && !(enter && newColumn == index && newRow == rowIndex)"/>
+               <Cell :class="{secondaryCell: true, absolute: enter && newColumn == index && newRow == rowIndex}" @click="insert(index)" @touchend="insert(index)" :value="0" :hidden="element != 0 && !(enter && newColumn == index && newRow == rowIndex)"/>
             </div>
         </div>
     </div>
