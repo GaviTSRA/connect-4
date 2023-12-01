@@ -83,7 +83,7 @@
 
 <style>
     .reset-button {
-        width: 10rem;
+        width: 10vw;
         margin: 20px auto;
         padding: 1rem;
         background-color: rgb(57, 231, 86);
@@ -91,6 +91,7 @@
         border-style: none;
         color: black;
         align-self: center;
+        font-size: 2vw;
     }
 
     .reset-button:active {
