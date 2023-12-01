@@ -2,10 +2,11 @@
     import { ref } from "vue"
     import BackButton from "../BackButton.vue";
     import { useWS } from "../../stores/ws";
+    import UsernameInput from "../UsernameInput.vue";
 
     let username = ref("")
     if($cookies.isKey("username"))
-        username.value = $cookies.get("username")
+        updateUsername()
     let id = ref("")
     let status = ref(0)
     let creating = ref(false)
@@ -27,17 +28,18 @@
         }
     }
 
+    function updateUsername() {
+        username.value = $cookies.get("username")
+    }
+
     async function join(_id) {
-        $cookies.set("username", username.value)
         $cookies.set("game", _id)
         ws.conn.send("username " + username.value)
         ws.conn.send("join " + _id)
     }
 
     async function joinGame() {
-        $cookies.set("username", username.value)
         $cookies.set("game", id.value)
-        
         ws.conn.send("username " + username.value)
         ws.conn.send("join " + id.value)
     }
@@ -64,8 +66,7 @@
 <template>
     <BackButton/>
     <div class="container">
-        <label for="name">Username</label>
-        <input v-model="username" type="text" id="name" name="name">
+        <UsernameInput @username-changed="updateUsername"/>
         <div class="publicGames">
             <div v-for="game in games" class="game">
                 <p class="gameUser">{{ game[1] }}</p>

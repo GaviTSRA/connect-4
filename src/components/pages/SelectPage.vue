@@ -1,16 +1,28 @@
 <script setup>
     import { useWS } from "@/stores/ws"
     import { ref } from "vue"
+    import UsernameInput from "../UsernameInput.vue";
     
     $cookies.remove("game")
     $cookies.remove("other")
     let connected = ref(false)
+    let usernameValid = ref(false)
+    let username = ref("")
+
+    if ($cookies.isKey("username"))
+        updateUsername()
 
     let ws = useWS()
     connect()
 
     function go(loc) {
         window.location.hash = loc
+    }
+
+    function updateUsername() {
+        username.value = $cookies.get("username")
+        usernameValid.value = username.value.length >= 3 && !username.value.includes(" ")
+        console.log(usernameValid.value)
     }
 
     function connect() {
@@ -28,6 +40,7 @@
 </script>
 
 <template>
+    <UsernameInput class="usernameInput" @username-changed="updateUsername"/>
     <div class="selection">
         <button class="btn-local-singleplayer" @click="go('/play/local/singleplayer')">Singleplayer</button>
         <button class="btn-local-multiplayer" @click="go('/play/local/multiplayer')">Multiplayer</button>
@@ -36,14 +49,18 @@
         <h2 class="seperator"><span>OR</span></h2>
         
         <h1>Online</h1>
-        <button class="btn-online-bot" @click="go('/play/online/bot')" :disabled="!connected">Singleplayer</button>
-        <button class="btn-online-join" @click="go('/play/online/join')" :disabled="!connected">Multiplayer</button>
+        <button class="btn-online-bot" @click="go('/play/online/bot')" :disabled="!connected || !usernameValid">Singleplayer</button>
+        <button class="btn-online-join" @click="go('/play/online/join')" :disabled="!connected || !usernameValid">Multiplayer</button>
         <p class="connectedDisplay">{{ connected ? "Connected" : "Not connected" }}</p>
         <button class="reconnect" @click="connect" v-if="!connected">Reconnect</button>
     </div>
 </template>
 
 <style scoped>
+    .usernameInput {
+        margin: 0 auto;
+    }
+
     .reconnect {
         min-width: 0;
         padding: 0;
