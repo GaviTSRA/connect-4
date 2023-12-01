@@ -22,11 +22,10 @@
     function updateUsername() {
         username.value = $cookies.get("username")
         usernameValid.value = username.value.length >= 3 && !username.value.includes(" ")
-        console.log(usernameValid.value)
     }
 
     function connect() {
-        ws.conn = new WebSocket("ws://localhost:3000/connect")
+        ws.conn = new WebSocket(import.meta.env.VITE_SERVER_ADDR + "/connect")
         ws.conn.addEventListener("open", (event => {
             connected.value = true
         }))

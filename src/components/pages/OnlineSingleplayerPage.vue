@@ -22,7 +22,7 @@
 
     let username = ref($cookies.get("username"))
 
-    let ws = new WebSocket("ws://localhost:3000/bot")
+    let ws = new WebSocket(import.meta.env.VITE_SERVER_ADDR + "/bot")
 
     ws.onopen = () => {
         ws.send("username " + username.value)
