@@ -5,14 +5,14 @@
     import { ref } from "vue"
 
     let board = ref([
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0]
-        ])
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0]
+    ])
     let winner = ref([0])
     let gameFinished = ref(false)
     let turn = ref(true)
@@ -43,11 +43,20 @@
             gameFinished.value = true
             winner.value = args[1]
         }
+        if (args[0] == "rematch") {
+            winner.value = 0
+            turn.value = "0"
+            gameFinished.value = false
+        }
     }
 
     function insert(col) {
         if (board.value[col][0] != 0) return
         ws.send("turn " + col)
+    }
+
+    function doRematch() {
+        ws.send("rematch")
     }
 </script>
 
@@ -56,6 +65,7 @@
         <BackButton/>
         <p class="other"><span class="user">{{ username }}</span> VS <span class="otherUser">Bot</span></p>
         <Board @insert="(col) => insert(col)" :board="board" :finished="gameFinished" :winner="winner" :turn="turn" :users="[username, 'Bot']"/>
+        <button @click="doRematch" class="reset-button" v-if="gameFinished">Rematch</button>
     </div>
 </template>
 
@@ -77,5 +87,29 @@
         display:flex;
         flex-direction: column;
         align-items: center;
+    }
+
+    .reset-button {
+        width: 10rem;
+        margin: 20px auto;
+        padding: 1rem;
+        background-color: rgb(57, 231, 86);
+        border-radius: 10px;
+        border-style: none;
+        color: black;
+        align-self: center;
+    }
+
+    .reset-button:active {
+        transform: translateY(-4px);
+    }
+
+    .reset-button:hover {
+        background-color: rgb(5, 158, 79)0, 255, 110);
+    }
+
+    .reset-button[disabled] {
+        background-color: gray;
+        color: rgb(70, 70, 70);
     }
 </style>

@@ -142,7 +142,7 @@ app.ws("/connect", (ws: WebSocket) => {
         else if (command == "turn" && args.length == 3) {
             const id: string = args[1]
             const action: number = parseInt(args[2])
-            if (!games[id]) return
+            if (!games[id] || games[id][7]) return
             const turn: number = games[id][5]
 
             if (games[id][turn] == username) {
@@ -235,6 +235,7 @@ app.ws("/bot", (ws: WebSocket) => {
     ]
     let turn = 1
     let username: string | undefined = undefined
+    let finished = false
     
     ws.on("close", () => {
 
@@ -249,10 +250,27 @@ app.ws("/bot", (ws: WebSocket) => {
             console.log(`[Bot Login] ${username}`)
         } 
 
-        if (command == "turn" && turn == 1 && args.length == 2 && username != undefined) {
+        if (command == "rematch" && finished) {
+            console.log(`[Bot ${username}] Rematch started`)
+            finished = false
+            turn = 1
+            game = [
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0]
+            ]
+            ws.send("rematch")
+            ws.send("board " + JSON.stringify(game))
+        }
+
+        if (command == "turn" && turn == 1 && args.length == 2 && username != undefined && !finished) {
             const col = parseInt(args[1])
-            turn = 2
             if (game[col][0] != 0) return
+            turn = 2
             console.log(`[Bot ${username}] Played ${col}`)
             game[col][0] = 1
             game = update(game)
@@ -260,20 +278,24 @@ app.ws("/bot", (ws: WebSocket) => {
 
             if (checkWin(game) == 1) {
                 ws.send("winner 1")
+                finished = true
                 // TODO update leaderboard
                 return
             }
 
+            const nextMove = getNextMove(game)
+            game[nextMove][0] = 2
+            game = update(game)
+
+            if (checkWin(game) == 2) {
+                finished = true
+                // TODO update leaderboard
+                ws.send("winner 2")
+            }
+
             setTimeout(() => {
-                const nextMove = getNextMove(game)
-                game[nextMove][0] = 2
-                game = update(game)
                 ws.send("board " + JSON.stringify(game))
                 turn = 1
-    
-                if (checkWin(game) == 2) {
-                    ws.send("winner 2")
-                }
             }, 500)
         }
     })
