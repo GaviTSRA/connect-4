@@ -58,7 +58,7 @@
     }
 
     .reset-button {
-        width: 5rem;
+        width: 10vw;
         margin: 20px auto;
         padding: 1rem;
         background-color: rgb(244, 47, 47);
