@@ -7,10 +7,16 @@
     function getColor() {
         return props.value == 0 ? "#222222" : props.value == 1 ? "green" : "red"
     }
+    function getImg() {
+        return props.value == 0 ? "" : props.value == 1 ? "/elf.png" : "/reindeer.png"
+    }
 </script>
 
 <template>
-    <div class="cell" :style="{'--color': getColor()}"></div>
+    <div>
+        <div v-if="props.value == 0" class="cell" :style="{'--color': getColor()}"></div>
+        <img class="cell" :src="getImg()" v-if="props.value != 0"/>
+    </div>
 </template>
 
 <style scoped>
