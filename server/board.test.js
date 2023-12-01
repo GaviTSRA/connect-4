@@ -196,3 +196,25 @@ test("Don't create win options for enemy", () => {
     ]
     expect(getNextMove(board)).not.toBe(3)
 })
+
+
+
+// ===================================================================================
+// ============================ Don't fall for double strat ==========================
+// ===================================================================================
+test("Don't fall for double strat", () => {
+    let board = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1],
+        [0, 0, 0, 0, 0, 1],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 2],
+        [0, 0, 0, 0, 0, 0]
+    ]
+    let move = getNextMove(board)
+    expect(move).not.toBe(1)
+    expect(move).not.toBe(2)
+    expect(move).not.toBe(5)
+    expect(move).not.toBe(6)
+})

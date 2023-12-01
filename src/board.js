@@ -106,6 +106,18 @@ function getNextMove(board) {
     let blockWinMove = checkWinningMove(board, options, 1)
     if (blockWinMove != -1) return blockWinMove
 
+    let finalOptions = []
+    for (let option of options) {
+        if (hasDoubleWinIn(board, 1, options, option)) continue
+        let copy = copyBoard(board)
+        copy[option][0] = 2
+        copy = update(copy)
+        if (checkWin(board) == 1) continue
+        finalOptions.push(option)
+    }
+    console.log(finalOptions)
+
+    /*
     // Check that the bot doesn't create a win for the opponent in the next two turns
     let finalOptions = []
     outer: for (let option of options) {
@@ -140,7 +152,7 @@ function getNextMove(board) {
             }
         }
         finalOptions.push(option)
-    }
+    }*/
 
     // If every move lets the opponent win, use all possible columns as options
     if (finalOptions.length == 0) finalOptions = options
@@ -148,6 +160,29 @@ function getNextMove(board) {
     // If no good move is found, choose one at random
     let chosen =  finalOptions[Math.floor(Math.random()*finalOptions.length)]
     return chosen;
+}
+
+function hasDoubleWinIn(board, turns, options, option) {
+    if (turns == 0) return false
+
+    if (board[option][0] != 0) return false
+    let copy = copyBoard(board)
+    copy[option][0] = 2
+    copy = update(copy)
+
+    for (let optionEnemy of options) {
+        if (copy[optionEnemy][0] != 0) continue
+        let copyEnemy = copyBoard(copy)
+        copyEnemy[optionEnemy][0] = 1
+        copyEnemy = update(copyEnemy)
+        console.log(copyEnemy)
+        if (checkHasDoubleWin(copyEnemy, options)) return true
+
+        for (let o of options) {
+            if (hasDoubleWinIn(copyEnemy, turns-1, options, o)) return true
+        }
+    }
+    return false
 }
 
 function checkHasDoubleWin(board, options) {
