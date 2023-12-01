@@ -53,9 +53,18 @@
         <p class="connectedDisplay">{{ connected ? "Connected" : "Not connected" }}</p>
         <button class="reconnect" @click="connect" v-if="!connected">Reconnect</button>
     </div>
+    <button class="scoreboardBtn" @click="go('/scoreboard')">Scoreboard</button>
 </template>
 
 <style scoped>
+    .scoreboardBtn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        height: 6vh;
+        width: 8vw;
+    }
+
     .usernameInput {
         margin: 0 auto;
     }

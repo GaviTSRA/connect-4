@@ -3,6 +3,7 @@ import WebSocket from "ws"
 import express from "express"
 import expressWs from "express-ws"
 import { update, checkWin, getNextMove } from "../src/board.js"
+import * as fs from "fs"
 
 const app = expressWs(express()).app
 const port = 3000
@@ -68,6 +69,10 @@ app.ws("/connect", (ws: WebSocket) => {
     ws.on('message', (message: string) => {
         const args: string[] = message.split(" ")
         const command: string = args[0]
+
+        if (command == "scoreboard") {
+            ws.send("scoreboard " + JSON.stringify(getScoreboardData("bot")))
+        }
 
         if (command == "username" && args.length == 2) {
             username = args[1]
@@ -236,6 +241,8 @@ app.ws("/bot", (ws: WebSocket) => {
     let turn = 1
     let username: string | undefined = undefined
     let finished = false
+    let timeStarted = Date.now()
+    let turns = 0
     
     ws.on("close", () => {
 
@@ -263,6 +270,8 @@ app.ws("/bot", (ws: WebSocket) => {
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0]
             ]
+            timeStarted = Date.now()
+            turns = 0
             ws.send("rematch")
             ws.send("board " + JSON.stringify(game))
         }
@@ -275,11 +284,13 @@ app.ws("/bot", (ws: WebSocket) => {
             game[col][0] = 1
             game = update(game)
             ws.send("board " + JSON.stringify(game))
+            turns += 1
 
             if (checkWin(game) == 1) {
                 ws.send("winner 1")
                 finished = true
-                // TODO update leaderboard
+                let finalTime = Date.now() - timeStarted
+                ws.send("best " + insertIntoScoreboard("bot", username, turns, finalTime) + " " + turns + " " + finalTime)
                 return
             }
 
@@ -287,10 +298,9 @@ app.ws("/bot", (ws: WebSocket) => {
             game[nextMove][0] = 2
             game = update(game)
 
-            if (checkWin(game) == 2) {
+            if (checkWin(game) != 0) {
                 finished = true
-                // TODO update leaderboard
-                ws.send("winner 2")
+                ws.send("winner " + checkWin(game))
             }
 
             setTimeout(() => {
@@ -300,6 +310,63 @@ app.ws("/bot", (ws: WebSocket) => {
         }
     })
 })
+
+function insertIntoScoreboard(scoreboardName: string, username: string, turns: number, finalTime: number) {
+    const filename = scoreboardName + ".json"
+    if (!fs.existsSync(filename)) fs.writeFileSync(filename, "{}", "utf-8")
+    
+    let data: {
+        [username: string] : [
+            turns: number,
+            finalTime: number
+        ]
+    } = JSON.parse(fs.readFileSync(filename, "utf-8"))
+
+    let newBest = false
+    if (username in data) {
+        if (data[username][0] > turns || (data[username][0] == turns && data[username][1] > finalTime)) {
+            data[username] = [turns, finalTime]
+            console.log(`[Bot ${username}] New Best! ${turns} turns in ${finalTime}`)
+            newBest = true
+        }
+    } else {
+        data[username] = [turns, finalTime]
+    }
+
+    fs.writeFileSync(filename, JSON.stringify(data), "utf-8")
+    return newBest
+}
+
+function getScoreboardData(scoreboard: string) {
+    let filename = scoreboard + ".json"
+    if (!fs.existsSync(filename)) fs.writeFileSync(filename, "{}", "utf-8")
+
+    let data: {
+        [username: string] : [
+            turns: number,
+            finalTime: number
+        ]
+    } = JSON.parse(fs.readFileSync(filename, "utf-8"))
+    let finalData: [
+        username: string,
+        turns: number,
+        time: number
+    ][] = []
+
+    Object.entries(data).forEach(
+        ([username, value]) => {
+            finalData.push([username, value[0], value[1]])
+        }
+    )
+
+    finalData.sort((a, b) => {
+        if (a[1] > b[1] || (a[1] == b[1] && a[2] > b[2]))
+            return 1
+        else return -1
+    })
+
+    return finalData
+}
 
 app.listen(port, () => {
     console.log(`Running on port ${port}`)

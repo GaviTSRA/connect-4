@@ -10,6 +10,7 @@
     import OnlineSingleplayerPage from "./components/pages/OnlineSingleplayerPage.vue"
     import { loadSlim } from "tsparticles-slim"
     import { loadFull } from "tsparticles"
+import ScoreboardPage from "./components/pages/ScoreboardPage.vue"
 
     const routes = {
         "": SelectPage,
@@ -19,7 +20,8 @@
         "/play/online/waiting": WaitingPage,
         "/play/online/join": JoinGamePage,
         "/play/online/game": OnlineGamePage,
-        "/play/online/bot": OnlineSingleplayerPage
+        "/play/online/bot": OnlineSingleplayerPage,
+        "/scoreboard": ScoreboardPage
     }
 
     const currentPath = ref(window.location.hash)
