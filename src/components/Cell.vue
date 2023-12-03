@@ -8,7 +8,7 @@
         return props.value == 0 ? "#222222" : props.value == 1 ? "green" : "red"
     }
     function getImg() {
-        return props.value == 0 ? "" : props.value == 1 ? "/elf.png" : "/reindeer.png"
+        return props.value == 0 ? "" : props.value == 1 ? "/reindeer.png" : "/elf.png"
     }
 </script>
 
