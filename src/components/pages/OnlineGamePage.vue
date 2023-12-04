@@ -83,7 +83,7 @@
 
 <style>
     .reset-button {
-        width: 10vw;
+        width: 15vw;
         margin: 20px auto;
         padding: 1rem;
         background-color: rgb(57, 231, 86);
@@ -99,7 +99,7 @@
     }
 
     .reset-button:hover {
-        background-color: rgb(5, 158, 79)0, 255, 110);
+        background-color: rgb(5, 158, 79);
     }
 
     .reset-button[disabled] {
