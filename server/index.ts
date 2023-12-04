@@ -44,14 +44,13 @@ app.ws("/connect", (ws: WebSocket) => {
 
         const isFirstUser: boolean = games[gameID][0] == username
         if (games[gameID][1] != undefined) {
-            if (games[gameID][7]) {
-                if (isFirstUser) {
-                    games[gameID][4]?.send("rematch -1")
-                } else {
-                    games[gameID][3].send("rematch -1")
-                }
-                console.log(`[${gameID}] Rematch canceled`)
+            if (isFirstUser) {
+                games[gameID][4]?.send("rematch -1")
             } else {
+                games[gameID][3].send("rematch -1")
+            }
+            console.log(`[${gameID}] Rematch canceled`)
+            if (!games[gameID][7]) {
                 if (isFirstUser) {
                     games[gameID][4]?.send("turn 0")
                     games[gameID][4]?.send("winner 2")
