@@ -189,7 +189,7 @@
     }
 
     .reset-button:hover {
-        background-color: rgb(5, 158, 79)0, 255, 110);
+        background-color: rgb(5, 158, 79);
     }
 
     .reset-button[disabled] {

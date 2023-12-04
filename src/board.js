@@ -153,8 +153,8 @@ function getNextMove(board) {
         finalOptions.push(option)
     }*/
 
-    let finalGoodOptions = []
     //Don't block own win options
+    let finalGoodOptions = []
     for (let option of finalOptions) {
         let copy = copyBoard(board)
         copy[option][0] = 2
