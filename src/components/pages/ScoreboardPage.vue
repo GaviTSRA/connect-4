@@ -31,7 +31,7 @@
                 <th>Time</th>
             </tr>
             <tr v-for="(row, index) in data">
-                <td class="middle turns" :style="{'--color': (1-((index+1)/data.length))*255}">{{ index+1 }}</td>
+                <td class="middle turns" :style="{'--color': (1-((index+1)/(data.length+1)))*255}">{{ index+1 }}</td>
                 <td class="left">{{ row[0] }}</td>
                 <td class="right" :style="{'--color': (1-(row[1]/21))*255}">{{ row[1] }}</td>
                 <td class="right">{{ row[2] }}</td>
