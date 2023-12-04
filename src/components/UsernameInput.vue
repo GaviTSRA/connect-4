@@ -2,16 +2,18 @@
     import { watch, ref } from "vue"
 
     let username = ref("")
-    if ($cookies.isKey("username"))
-        username.value = $cookies.get("username")
 
+    let props = defineProps(["load"])
     let emit = defineEmits(["usernameChanged"])
+
+    if ($cookies.isKey("username") && props.load)
+        username.value = $cookies.get("username")
 
     watch(
         () => username.value,
         () => {
             $cookies.set("username", username.value)
-            emit("usernameChanged")
+            emit("usernameChanged", username.value)
         }
     ) 
 </script>

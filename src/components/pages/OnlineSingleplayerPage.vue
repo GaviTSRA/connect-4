@@ -1,5 +1,5 @@
 <script setup>
-    import { useWS } from '../../stores/ws';
+    import UsernameInput from "../UsernameInput.vue"
     import BackButton from '../BackButton.vue';
     import Board from '../Board.vue';
     import { ref } from "vue"
@@ -23,17 +23,11 @@
     let newBest = ref(false)
     let turns = ref(0)
     let beatTime = ref(0)
+    let awaitingUsername = ref(false)
 
-    if (!$cookies.isKey("username"))
-        window.location.hash = ""
-
-    let username = ref($cookies.get("username"))
+    let username = ref("")
 
     let ws = new WebSocket(import.meta.env.VITE_SERVER_ADDR + "/bot")
-
-    ws.onopen = () => {
-        ws.send("username " + username.value)
-    }
 
     ws.onclose = () => {
         window.location.hash = ""
@@ -50,6 +44,10 @@
             turn.value = "1"
             gameFinished.value = true
             winner.value = args[1]
+
+            if (winner.value == 1) {
+                awaitingUsername.value = true
+            }
         }
         if (args[0] == "rematch") {
             winner.value = 0
@@ -73,6 +71,17 @@
         }
     }
 
+    function usernameChanged(name) {
+        username.value = name
+    }
+
+    function sendUsername(name) {
+        if (!awaitingUsername.value) return
+        awaitingUsername.value = false
+        ws.send("username " + name)
+        username.value = ""
+    }
+
     function insert(col) {
         if (board.value[col][0] != 0) return
         ws.send("turn " + col)
@@ -86,13 +95,17 @@
 <template>
     <div class="page">
         <div class="game">
-            <BackButton/>
-            <p class="other"><span class="user">{{ username }}</span> VS <span class="otherUser">Bot</span></p>
-            <Board @insert="(col) => insert(col)" :board="board" :finished="gameFinished" :winner="winner" :turn="turn" :users="[username, 'Bot']"/>
+            <!-- <BackButton/> -->
+            <!-- <p class="other"><span class="user">{{ username }}</span> VS <span class="otherUser">Bot</span></p> -->
+            <Board @insert="(col) => insert(col)" :board="board" :finished="gameFinished" :winner="winner" :turn="turn" :users="['You', 'Bot']"/>
             <button @click="doRematch" class="reset-button" v-if="gameFinished">Rematch</button>
             <div class="newBest" v-if="gameFinished && winner == 1">
                 <h1>{{ newBest ? "New Best!" : "You won!"}}</h1>
-                <p>{{ turns }} turns in {{ beatTime / 1000 }} seconds</p>
+                <p>{{ turns }} turns in {{ Math.round(beatTime / 1000) }} seconds</p>
+                <div v-if="awaitingUsername" class="username">
+                    <UsernameInput :load="false" @username-changed="usernameChanged" class="username" v-model="username"/>
+                    <button :disabled="username.length < 3 || username.includes(' ')" class="confirmBtn" @click="sendUsername(username)">Confirm</button>
+                </div>
             </div>
         </div>
         <Scoreboard class="scoreboard" />
@@ -100,6 +113,26 @@
 </template>
 
 <style>
+    .confirmBtn {
+        padding: 1rem 2rem;
+        background-color: green;
+        border-style: none;
+        border-radius: 10px;
+        font-size: 2rem;
+    }
+    .confirmBtn[disabled] {
+        background-color: gray;
+        color: rgb(67, 67, 67);
+    }
+    .confirmBtn:hover {
+        background-color: yellowgreen;
+    }
+    .confirmBtn:active {
+        background-color: white;
+    }
+    .username {
+        margin-top: 20px;
+    }
     .page {
         display: flex;
         flex-direction: row;
@@ -112,7 +145,7 @@
 
     .newBest{
         position: absolute;
-        top: 40%;   
+        top: 30%;   
         background-color: rgba(.6, .6, .6, .8);
         padding: 3vw;
         border-radius: 10px;

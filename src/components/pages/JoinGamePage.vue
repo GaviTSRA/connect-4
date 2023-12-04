@@ -28,7 +28,7 @@
         }
     }
 
-    function updateUsername() {
+    function updateUsername(name) {
         username.value = $cookies.get("username")
     }
 
@@ -66,7 +66,7 @@
 <template>
     <BackButton/>
     <div class="container">
-        <UsernameInput @username-changed="updateUsername"/>
+        <UsernameInput :load="true" @username-changed="updateUsername"/>
         <div class="publicGames">
             <div v-for="game in games" class="game">
                 <p class="gameUser">{{ game[1] }}</p>

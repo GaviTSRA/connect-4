@@ -242,6 +242,7 @@ app.ws("/bot", (ws: WebSocket) => {
     let finished = false
     let timeStarted = Date.now()
     let turns = 0
+    let finalTime = -1
     
     ws.on("close", () => {
 
@@ -251,9 +252,10 @@ app.ws("/bot", (ws: WebSocket) => {
         const args: string[] = message.split(" ")
         const command: string = args[0]
 
-        if (command == "username" && args.length ==  2) {
+        if (command == "username" && args.length ==  2 && finished) {
             username = args[1]
             console.log(`[Bot Login] ${username}`)
+            ws.send("best " + insertIntoScoreboard("bot", username, turns, finalTime) + " " + turns + " " + finalTime)
         } 
 
         if (command == "rematch" && finished) {
@@ -275,7 +277,7 @@ app.ws("/bot", (ws: WebSocket) => {
             ws.send("board " + JSON.stringify(game))
         }
 
-        if (command == "turn" && turn == 1 && args.length == 2 && username != undefined && !finished) {
+        if (command == "turn" && turn == 1 && args.length == 2 && !finished) {
             const col = parseInt(args[1])
             if (game[col][0] != 0) return
             turn = 2
@@ -288,8 +290,8 @@ app.ws("/bot", (ws: WebSocket) => {
             if (checkWin(game) == 1) {
                 ws.send("winner 1")
                 finished = true
-                let finalTime = Date.now() - timeStarted
-                ws.send("best " + insertIntoScoreboard("bot", username, turns, finalTime) + " " + turns + " " + finalTime)
+                finalTime = Date.now() - timeStarted
+                ws.send("best false " + turns + " " + finalTime)
                 return
             }
 

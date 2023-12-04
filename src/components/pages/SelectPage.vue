@@ -19,7 +19,7 @@
         window.location.hash = loc
     }
 
-    function updateUsername() {
+    function updateUsername(name) {
         username.value = $cookies.get("username")
         usernameValid.value = username.value.length >= 3 && !username.value.includes(" ")
     }
@@ -39,7 +39,7 @@
 </script>
 
 <template>
-    <UsernameInput class="usernameInput" @username-changed="updateUsername"/>
+    <UsernameInput load="true" class="usernameInput" @username-changed="updateUsername"/>
     <div class="selection">
         <button class="btn-local-singleplayer" @click="go('/play/local/singleplayer')">Singleplayer</button>
         <button class="btn-local-multiplayer" @click="go('/play/local/multiplayer')">Multiplayer</button>

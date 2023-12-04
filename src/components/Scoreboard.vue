@@ -15,6 +15,10 @@
 
         if (command == "scoreboard") {
             data.value = JSON.parse(args[1])
+
+            setTimeout(() => {
+                ws.conn.send("scoreboard")
+            }, 1000)
         }
     }
 </script>
