@@ -24,7 +24,7 @@
 </script>
 
 <template>
-    <div>
+    <div class="container">
         <table>
             <tr>
                 <th>Place</th>
@@ -43,8 +43,13 @@
 </template>
 
 <style scoped>
+    .container {
+        height: 95vh;
+        overflow: hidden;
+    }
     table {
-        font-size: 2vw;
+        font-size: 1.26vw;
+        overflow:hidden;
     }
     th {
         color: coral;

@@ -146,7 +146,7 @@
     .newBest{
         position: absolute;
         top: 30%;   
-        background-color: rgba(.6, .6, .6, .8);
+        background-color: rgba(.6, .6, .6, .9);
         padding: 3vw;
         border-radius: 10px;
         text-align: center;
