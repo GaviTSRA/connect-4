@@ -4,7 +4,7 @@
     import Board from '../Board.vue';
     import { ref } from "vue"
     import JSConfetti from 'js-confetti'
-
+    import Scoreboard from '../Scoreboard.vue';
     const jsConfetti = new JSConfetti()
 
     let board = ref([
@@ -84,19 +84,32 @@
 </script>
 
 <template>
-    <div class="game">
-        <BackButton/>
-        <p class="other"><span class="user">{{ username }}</span> VS <span class="otherUser">Bot</span></p>
-        <Board @insert="(col) => insert(col)" :board="board" :finished="gameFinished" :winner="winner" :turn="turn" :users="[username, 'Bot']"/>
-        <button @click="doRematch" class="reset-button" v-if="gameFinished">Rematch</button>
-        <div class="newBest" v-if="gameFinished && winner == 1">
-            <h1>{{ newBest ? "New Best!" : "You won!"}}</h1>
-            <p>{{ turns }} turns in {{ beatTime / 1000 }} seconds</p>
+    <div class="page">
+        <div class="game">
+            <BackButton/>
+            <p class="other"><span class="user">{{ username }}</span> VS <span class="otherUser">Bot</span></p>
+            <Board @insert="(col) => insert(col)" :board="board" :finished="gameFinished" :winner="winner" :turn="turn" :users="[username, 'Bot']"/>
+            <button @click="doRematch" class="reset-button" v-if="gameFinished">Rematch</button>
+            <div class="newBest" v-if="gameFinished && winner == 1">
+                <h1>{{ newBest ? "New Best!" : "You won!"}}</h1>
+                <p>{{ turns }} turns in {{ beatTime / 1000 }} seconds</p>
+            </div>
         </div>
+        <Scoreboard class="scoreboard" />
     </div>
 </template>
 
 <style>
+    .page {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .scoreboard {
+        margin-left: 1rem;
+        width: 35vw;
+    }
+
     .newBest{
         position: absolute;
         top: 40%;   
