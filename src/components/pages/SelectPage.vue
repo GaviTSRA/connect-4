@@ -53,18 +53,10 @@
         <p class="connectedDisplay">{{ connected ? "Connected" : "Not connected" }}</p>
         <button class="reconnect" @click="connect" v-if="!connected">Reconnect</button>
     </div>
-    <button class="scoreboardBtn" @click="go('/scoreboard')">Scoreboard</button>
+    <button class="scoreboardBtn" @click="go('/scoreboard')">Scoreboard (Online Singleplayer)</button>
 </template>
 
 <style scoped>
-    .scoreboardBtn {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        height: 6vh;
-        width: 8vw;
-    }
-
     .usernameInput {
         margin: 0 auto;
     }
@@ -88,18 +80,28 @@
 
     .selection {
         width: 100%;
+        margin-bottom: 5rem;
     }
 
     button {
         min-width: 20vw;
         min-height: min(max(10vh, 1rem), 1rem);
-        font-size: min(max(3vw, 1.5rem), 3rem);
+        font-size: min(max(3vw, 1rem), 3rem);
         margin: 10px;
         height: 40%;
         padding: 0px 1rem;
         border-style: none;
         border-radius: 10px;
         text-align: center;
+    }
+
+    .scoreboardBtn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 10rem;
+        height: 7rem;
+        font-size: 2vw;
     }
 
     button:hover {

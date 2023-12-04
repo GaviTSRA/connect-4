@@ -42,6 +42,7 @@
     input[type="text"] {
         margin-bottom: 20px;
         font-size: 2rem;
+        width: min(30vw, 15rem)
     }
 
     label {
