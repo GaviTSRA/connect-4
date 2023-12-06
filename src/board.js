@@ -116,43 +116,6 @@ function getNextMove(board) {
         finalOptions.push(option)
     }
 
-    /*
-    // Check that the bot doesn't create a win for the opponent in the next two turns
-    let finalOptions = []
-    outer: for (let option of options) {
-        let copy = copyBoard(board)
-        copy[option][0] = 2
-        copy = update(copy)
-        if (checkWinningMove(copy, options, 1) != -1) continue
-
-        for (let optionNext of options) {
-            if (copy[optionNext][0] != 0) continue
-            let copyNext = copyBoard(copy)
-            copyNext[optionNext][0] = 1
-            copyNext = update(copyNext)
-
-            if(checkHasDoubleWin(copyNext, options)) continue outer
-
-            for (let optionNext2 of options) {
-                if (copyNext[optionNext2] != 0) continue
-                let copyNext2 = copyBoard(copyNext)
-                copyNext2[optionNext2][0] = 2
-                copyNext2 = update(copyNext2)
-                if (checkWinningMove(copyNext2, options, 1) != -1) continue
-
-                for (let optionNext3 of options) {
-                    if (copyNext2[optionNext3] != 0) continue
-                    let copyNext3 = copyBoard(copyNext2)
-                    copyNext3[optionNext3][0] = 1
-                    copyNext3 = update(copyNext3)
-
-                    if(checkHasDoubleWin(copyNext3, options)) continue outer
-                }
-            }
-        }
-        finalOptions.push(option)
-    }*/
-
     //Don't block own win options
     let finalGoodOptions = []
     for (let option of finalOptions) {
