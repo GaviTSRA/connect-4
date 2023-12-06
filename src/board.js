@@ -106,6 +106,7 @@ function getNextMove(board) {
     let blockWinMove = checkWinningMove(board, options, 1)
     if (blockWinMove != -1) return blockWinMove
 
+    // Don't help the opponent create win options
     let finalOptions = []
     for (let option of options) {
         if (hasDoubleWinIn(board, 1, options, option)) continue
@@ -126,13 +127,13 @@ function getNextMove(board) {
         finalGoodOptions.push(option)
     }
 
-    // If every move lets the opponent win, use all possible columns as options
+    // If every move lets the opponent block a win of the bot, use all options that don't create wins for the opponent
     if (finalGoodOptions.length == 0) finalGoodOptions = finalOptions
-    if (finalGoodOptions.length == 0) finalGoodOptions = options
 
-    console.log(finalGoodOptions)
+    // If all options create wins from the opponent, choose a column randomly
+    if (finalGoodOptions.length == 0) finalGoodOptions = options
     
-    // If no good move is found, choose one at random
+    // Choose move from selected possibilities randomly
     let chosen =  finalGoodOptions[Math.floor(Math.random()*finalGoodOptions.length)]
     return chosen;
 }
