@@ -89,11 +89,9 @@ function copyBoard(board) {
 }
 
 function getNextMove(board) {
-    let _options = [0, 1, 2, 3, 4, 5, 6]
-    
     // Remove all full columns from possible placements
     let options = []
-    for (let option of _options) {
+    for (let option of [0, 1, 2, 3, 4, 5, 6]) {
         if (board[option][0] != 0) continue
         options.push(option)
     }
